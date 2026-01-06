@@ -5,6 +5,8 @@ function debugLog(...args) {
   if (DEBUG) console.log(...args);
 }
 
+const FAVORITES_KEY = "pizzaFavorites";
+
 const deals = [
   {
     id: "deal-1",
@@ -49,6 +51,9 @@ const els = {
   dealsCount: document.querySelector("#dealsCount"),
   dealCardTpl: document.getElementById("dealCardTpl"),
 };
+
+let favorites = new Set();
+let currentList = deals;
 
 function money(n) {
   return `$${n.toFixed(2)}`;
@@ -146,6 +151,22 @@ function applySort(list, sortKey) {
   return copy;
 }
 
+function loadFavorites() {
+  try {
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    if (!raw) return new Set();
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return new Set();
+    return new Set(arr);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveFavorites() {
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favorites]));
+}
+
 function updateCount(showing, total) {
   els.dealsCount.textContent = `Showing ${showing} of ${total} deals.`;
 }
@@ -170,6 +191,11 @@ function renderDeals(list) {
     const col = card.querySelector(".column");
     col.dataset.dealId = deal.id;
 
+    const favBtn = card.querySelector('[data-action="favorite"]');
+    const isFav = favorites.has(deal.id);
+    favBtn.textContent = isFav ? "★" : "☆";
+    favBtn.setAttribute("aria-pressed", String(isFav));
+
     frag.appendChild(card);
   }
 
@@ -178,8 +204,10 @@ function renderDeals(list) {
 
 function init() {
   debugLog("init");
+  favorites = loadFavorites();
   updateCount(deals.length, deals.length);
-  renderDeals(deals);
+  currentList = deals;
+  renderDeals(currentList);
   buildTypeOptions(deals);
 
   els.qInput.addEventListener("input", validateSearch);
@@ -199,8 +227,9 @@ function init() {
       applyPriceRange(applyType(applySearch(deals, q), type), min, max),
       sortKey
     );
+    currentList = filtered;
     updateCount(filtered.length, deals.length);
-    renderDeals(filtered);
+    renderDeals(currentList);
   }
 
   els.filtersForm.addEventListener("submit", (e) => {
@@ -220,7 +249,24 @@ function init() {
     validateSearch();
     validatePriceRange();
     updateCount(deals.length, deals.length);
-    renderDeals(deals);
+    currentList = deals;
+    renderDeals(currentList);
+  });
+
+  els.dealsGrid.addEventListener("click", (e) => {
+    const btn = e.target.closest('[data-action="favorite"]');
+    if (!btn) return;
+    const col = btn.closest(".column");
+    if (!col) return;
+
+    const id = col.dataset.dealId;
+    if (!id) return;
+
+    if (favorites.has(id)) favorites.delete(id);
+    else favorites.add(id);
+
+    saveFavorites();
+    renderDeals(currentList);
   });
 
   validatePriceRange();
