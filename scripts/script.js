@@ -50,10 +50,17 @@ const els = {
   dealsGrid: document.getElementById("dealsGrid"),
   dealsCount: document.querySelector("#dealsCount"),
   dealCardTpl: document.getElementById("dealCardTpl"),
+  detailsEmpty: document.getElementById("detailsEmpty"),
+  detailsBody: document.getElementById("detailsBody"),
+  detailsName: document.getElementById("detailsName"),
+  detailsRestaurant: document.getElementById("detailsRestaurant"),
+  detailsMeta: document.getElementById("detailsMeta"),
+  detailsLink: document.getElementById("detailsLink"),
 };
 
 let favorites = new Set();
 let currentList = deals;
+let selectedDealId = null;
 
 function money(n) {
   return `$${n.toFixed(2)}`;
@@ -200,6 +207,56 @@ function renderDeals(list) {
   }
 
   els.dealsGrid.appendChild(frag);
+
+  // Re-apply active styling after rerender (DOM navigation: parent/child)
+  if (selectedDealId) {
+    const activeCol = els.dealsGrid.querySelector(
+      `.column[data-deal-id="${selectedDealId}"]`
+    );
+    if (activeCol) {
+      const activeCard = activeCol.firstElementChild;
+      if (activeCard) activeCard.classList.add("is-active");
+    }
+  }
+}
+
+function renderDetails(deal) {
+  if (!deal) {
+    els.detailsBody.classList.add("is-hidden");
+    els.detailsEmpty.classList.remove("is-hidden");
+    selectedDealId = null;
+    return;
+  }
+
+  els.detailsEmpty.classList.add("is-hidden");
+  els.detailsBody.classList.remove("is-hidden");
+
+  els.detailsName.textContent = deal.dealName;
+  els.detailsRestaurant.textContent = deal.restaurant;
+  els.detailsMeta.textContent = `${deal.type} • ${money(deal.price)} • ⭐ ${deal.rating}`;
+  els.detailsLink.href = deal.url;
+}
+
+function setActiveDeal(id) {
+  selectedDealId = id;
+
+  // DOM navigation requirement: parentElement + child traversal
+  for (const col of els.dealsGrid.children) {
+    const card = col.firstElementChild;
+    if (!card) continue;
+    card.classList.toggle("is-active", col.dataset.dealId === id);
+  }
+
+  const deal = deals.find((d) => d.id === id) || null;
+  renderDetails(deal);
+
+  // BOM: location.hash as state
+  if (deal) location.hash = deal.id;
+}
+
+function getDealIdFromHash() {
+  const id = (location.hash || "").replace(/^#/, "");
+  return id || null;
 }
 
 function init() {
@@ -209,6 +266,7 @@ function init() {
   currentList = deals;
   renderDeals(currentList);
   buildTypeOptions(deals);
+  renderDetails(null);
 
   els.qInput.addEventListener("input", validateSearch);
   els.minPrice.addEventListener("input", validatePriceRange);
@@ -269,7 +327,32 @@ function init() {
     renderDeals(currentList);
   });
 
+  // Card click -> details (event delegation)
+  els.dealsGrid.addEventListener("click", (e) => {
+    if (e.target.closest('[data-action="favorite"]')) return;
+    if (e.target.closest('a[data-role="link"]')) return;
+
+    const col = e.target.closest(".column");
+    if (!col) return;
+    const id = col.dataset.dealId;
+    if (!id) return;
+
+    setActiveDeal(id);
+  });
+
+  window.addEventListener("hashchange", () => {
+    const id = getDealIdFromHash();
+    if (!id) return;
+    if (!deals.some((d) => d.id === id)) return;
+    setActiveDeal(id);
+  });
+
   validatePriceRange();
+
+  const initialId = getDealIdFromHash();
+  if (initialId && deals.some((d) => d.id === initialId)) {
+    setActiveDeal(initialId);
+  }
 }
 
 init();

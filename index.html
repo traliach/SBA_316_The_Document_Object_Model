@@ -134,6 +134,27 @@
           <div id="dealsCount" class="has-text-grey mb-3"></div>
           <div id="dealsGrid" class="columns is-multiline"></div>
 
+          <section id="details" class="box mt-5">
+            <h2 class="title is-5 mb-2">Deal details</h2>
+            <p id="detailsEmpty" class="has-text-grey">
+              Click a deal card to see details here.
+            </p>
+            <div id="detailsBody" class="is-hidden">
+              <p class="mb-1"><strong id="detailsName"></strong></p>
+              <p class="mb-1" id="detailsRestaurant"></p>
+              <p class="mb-3" id="detailsMeta"></p>
+              <a
+                id="detailsLink"
+                class="button is-small is-link"
+                href="#"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open deal link
+              </a>
+            </div>
+          </section>
+
           <template id="dealCardTpl">
             <div class="column is-4">
               <div class="card">

@@ -1,1 +1,6 @@
 * { box-sizing: border-box; }
+
+.card.is-active {
+  outline: 2px solid hsl(217, 71%, 53%);
+  outline-offset: 2px;
+}
