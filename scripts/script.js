@@ -40,6 +40,10 @@ const els = {
   qInput: document.getElementById("q"),
   qHelp: document.querySelector("#qHelp"),
   typeSelect: document.getElementById("type"),
+  minPrice: document.getElementById("minPrice"),
+  maxPrice: document.getElementById("maxPrice"),
+  priceHelp: document.querySelector("#priceHelp"),
+  searchBtn: document.getElementById("searchBtn"),
   dealsGrid: document.getElementById("dealsGrid"),
   dealsCount: document.querySelector("#dealsCount"),
   dealCardTpl: document.getElementById("dealCardTpl"),
@@ -51,6 +55,13 @@ function money(n) {
 
 function normalize(s) {
   return s.trim().toLowerCase();
+}
+
+function parsePriceInput(el) {
+  const raw = el.value.trim();
+  if (!raw) return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
 }
 
 function buildTypeOptions(list) {
@@ -76,6 +87,22 @@ function validateSearch() {
   return ok;
 }
 
+function validatePriceRange() {
+  const min = parsePriceInput(els.minPrice);
+  const max = parsePriceInput(els.maxPrice);
+
+  const ok = min === null || max === null || min <= max;
+
+  els.minPrice.classList.toggle("is-danger", !ok);
+  els.maxPrice.classList.toggle("is-danger", !ok);
+  els.priceHelp.classList.toggle("is-hidden", ok);
+
+  // Attribute change requirement: disable the button when invalid
+  els.searchBtn.disabled = !ok;
+
+  return ok;
+}
+
 function applySearch(list, q) {
   if (!q) return list;
   return list.filter(
@@ -87,6 +114,14 @@ function applySearch(list, q) {
 function applyType(list, type) {
   if (!type) return list;
   return list.filter((d) => d.type === type);
+}
+
+function applyPriceRange(list, min, max) {
+  return list.filter((d) => {
+    if (min !== null && d.price < min) return false;
+    if (max !== null && d.price > max) return false;
+    return true;
+  });
 }
 
 function updateCount(showing, total) {
@@ -126,12 +161,18 @@ function init() {
   buildTypeOptions(deals);
 
   els.qInput.addEventListener("input", validateSearch);
+  els.minPrice.addEventListener("input", validatePriceRange);
+  els.maxPrice.addEventListener("input", validatePriceRange);
 
   function runFilters() {
     if (!validateSearch()) return;
+    if (!validatePriceRange()) return;
     const q = normalize(els.qInput.value);
     const type = els.typeSelect.value;
-    const filtered = applyType(applySearch(deals, q), type);
+    const min = parsePriceInput(els.minPrice);
+    const max = parsePriceInput(els.maxPrice);
+
+    const filtered = applyPriceRange(applyType(applySearch(deals, q), type), min, max);
     updateCount(filtered.length, deals.length);
     renderDeals(filtered);
   }
@@ -146,10 +187,15 @@ function init() {
   document.getElementById("clearBtn").addEventListener("click", () => {
     els.qInput.value = "";
     els.typeSelect.value = "";
+    els.minPrice.value = "";
+    els.maxPrice.value = "";
     validateSearch();
+    validatePriceRange();
     updateCount(deals.length, deals.length);
     renderDeals(deals);
   });
+
+  validatePriceRange();
 }
 
 init();
