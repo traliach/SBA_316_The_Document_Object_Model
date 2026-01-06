@@ -65,6 +65,44 @@
               </div>
             </div>
 
+            <div class="columns is-mobile">
+              <div class="column">
+                <div class="field">
+                  <label class="label" for="minPrice">Min price</label>
+                  <div class="control">
+                    <input
+                      id="minPrice"
+                      name="minPrice"
+                      class="input"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label" for="maxPrice">Max price</label>
+                  <div class="control">
+                    <input
+                      id="maxPrice"
+                      name="maxPrice"
+                      class="input"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="25.00"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p id="priceHelp" class="help is-danger is-hidden">
+              Min price must be less than or equal to max price.
+            </p>
+
             <div class="field is-grouped">
               <div class="control">
                 <button id="searchBtn" class="button is-link" type="submit">
