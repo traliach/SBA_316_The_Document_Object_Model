@@ -280,7 +280,6 @@ function init() {
   buildTypeOptions(deals);
   renderDetails(null);
 
-  els.qInput.addEventListener("input", validateSearch);
   els.minPrice.addEventListener("input", validatePriceRange);
   els.maxPrice.addEventListener("input", validatePriceRange);
 
@@ -306,6 +305,14 @@ function init() {
       clearActiveDeal();
     }
   }
+
+  // Auto-refresh results when user clears/updates the search input
+  els.qInput.addEventListener("input", () => {
+    const ok = validateSearch();
+    const q = normalize(els.qInput.value);
+    if (!ok) return;
+    if (q.length === 0 || q.length >= 2) runFilters();
+  });
 
   els.filtersForm.addEventListener("submit", (e) => {
     e.preventDefault();
