@@ -36,6 +36,9 @@ const deals = [
 ];
 
 const els = {
+  filtersForm: document.getElementById("filtersForm"),
+  qInput: document.getElementById("q"),
+  qHelp: document.querySelector("#qHelp"),
   dealsGrid: document.getElementById("dealsGrid"),
   dealsCount: document.querySelector("#dealsCount"),
   dealCardTpl: document.getElementById("dealCardTpl"),
@@ -43,6 +46,32 @@ const els = {
 
 function money(n) {
   return `$${n.toFixed(2)}`;
+}
+
+function normalize(s) {
+  return s.trim().toLowerCase();
+}
+
+function validateSearch() {
+  const q = normalize(els.qInput.value);
+  const ok = q.length === 0 || q.length >= 2;
+
+  els.qInput.classList.toggle("is-danger", !ok);
+  els.qHelp.classList.toggle("is-hidden", ok);
+
+  return ok;
+}
+
+function applySearch(list, q) {
+  if (!q) return list;
+  return list.filter(
+    (d) =>
+      normalize(d.restaurant).includes(q) || normalize(d.dealName).includes(q)
+  );
+}
+
+function updateCount(showing, total) {
+  els.dealsCount.textContent = `Showing ${showing} of ${total} deals.`;
 }
 
 function renderDeals(list) {
@@ -73,8 +102,27 @@ function renderDeals(list) {
 
 function init() {
   debugLog("init");
-  els.dealsCount.textContent = `Loaded ${deals.length} deals.`;
+  updateCount(deals.length, deals.length);
   renderDeals(deals);
+
+  els.qInput.addEventListener("input", validateSearch);
+
+  els.filtersForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!validateSearch()) return;
+
+    const q = normalize(els.qInput.value);
+    const filtered = applySearch(deals, q);
+    updateCount(filtered.length, deals.length);
+    renderDeals(filtered);
+  });
+
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    els.qInput.value = "";
+    validateSearch();
+    updateCount(deals.length, deals.length);
+    renderDeals(deals);
+  });
 }
 
 init();

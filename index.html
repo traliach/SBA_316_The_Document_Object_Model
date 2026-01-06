@@ -36,6 +36,38 @@
             Next: we’ll add the filters form + deal cards.
           </div>
 
+          <form id="filtersForm" class="box mb-4">
+            <div class="field">
+              <label class="label" for="q">Search deals</label>
+              <div class="control">
+                <input
+                  id="q"
+                  name="q"
+                  class="input"
+                  type="search"
+                  minlength="2"
+                  placeholder="Try: slice, family, downtown..."
+                />
+              </div>
+              <p id="qHelp" class="help is-danger is-hidden">
+                Enter at least 2 characters.
+              </p>
+            </div>
+
+            <div class="field is-grouped">
+              <div class="control">
+                <button id="searchBtn" class="button is-link" type="submit">
+                  Search
+                </button>
+              </div>
+              <div class="control">
+                <button id="clearBtn" class="button is-light" type="button">
+                  Clear
+                </button>
+              </div>
+            </div>
+          </form>
+
           <div id="dealsCount" class="has-text-grey mb-3"></div>
           <div id="dealsGrid" class="columns is-multiline"></div>
 
