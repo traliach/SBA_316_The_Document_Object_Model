@@ -39,6 +39,7 @@ const els = {
   filtersForm: document.getElementById("filtersForm"),
   qInput: document.getElementById("q"),
   qHelp: document.querySelector("#qHelp"),
+  typeSelect: document.getElementById("type"),
   dealsGrid: document.getElementById("dealsGrid"),
   dealsCount: document.querySelector("#dealsCount"),
   dealCardTpl: document.getElementById("dealCardTpl"),
@@ -50,6 +51,19 @@ function money(n) {
 
 function normalize(s) {
   return s.trim().toLowerCase();
+}
+
+function buildTypeOptions(list) {
+  const set = new Set();
+  for (const d of list) set.add(d.type);
+  const types = [...set].sort();
+
+  for (const t of types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    els.typeSelect.appendChild(opt);
+  }
 }
 
 function validateSearch() {
@@ -68,6 +82,11 @@ function applySearch(list, q) {
     (d) =>
       normalize(d.restaurant).includes(q) || normalize(d.dealName).includes(q)
   );
+}
+
+function applyType(list, type) {
+  if (!type) return list;
+  return list.filter((d) => d.type === type);
 }
 
 function updateCount(showing, total) {
@@ -104,21 +123,29 @@ function init() {
   debugLog("init");
   updateCount(deals.length, deals.length);
   renderDeals(deals);
+  buildTypeOptions(deals);
 
   els.qInput.addEventListener("input", validateSearch);
 
-  els.filtersForm.addEventListener("submit", (e) => {
-    e.preventDefault();
+  function runFilters() {
     if (!validateSearch()) return;
-
     const q = normalize(els.qInput.value);
-    const filtered = applySearch(deals, q);
+    const type = els.typeSelect.value;
+    const filtered = applyType(applySearch(deals, q), type);
     updateCount(filtered.length, deals.length);
     renderDeals(filtered);
+  }
+
+  els.filtersForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    runFilters();
   });
+
+  els.typeSelect.addEventListener("change", runFilters);
 
   document.getElementById("clearBtn").addEventListener("click", () => {
     els.qInput.value = "";
+    els.typeSelect.value = "";
     validateSearch();
     updateCount(deals.length, deals.length);
     renderDeals(deals);
