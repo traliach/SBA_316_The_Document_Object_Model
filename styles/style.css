@@ -1,5 +1,22 @@
 * { box-sizing: border-box; }
 
+body {
+  background: #f5f7fb;
+}
+
+.section .container {
+  max-width: 980px;
+}
+
+.card {
+  border-radius: 12px;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  transition: transform 120ms ease;
+}
+
 .card.is-active {
   outline: 2px solid hsl(217, 71%, 53%);
   outline-offset: 2px;
