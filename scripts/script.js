@@ -40,6 +40,7 @@ const els = {
   qInput: document.getElementById("q"),
   qHelp: document.querySelector("#qHelp"),
   typeSelect: document.getElementById("type"),
+  sortSelect: document.getElementById("sort"),
   minPrice: document.getElementById("minPrice"),
   maxPrice: document.getElementById("maxPrice"),
   priceHelp: document.querySelector("#priceHelp"),
@@ -124,6 +125,27 @@ function applyPriceRange(list, min, max) {
   });
 }
 
+function applySort(list, sortKey) {
+  if (!sortKey) return list;
+  const copy = [...list];
+
+  switch (sortKey) {
+    case "priceAsc":
+      copy.sort((a, b) => a.price - b.price);
+      break;
+    case "priceDesc":
+      copy.sort((a, b) => b.price - a.price);
+      break;
+    case "ratingDesc":
+      copy.sort((a, b) => b.rating - a.rating);
+      break;
+    default:
+      break;
+  }
+
+  return copy;
+}
+
 function updateCount(showing, total) {
   els.dealsCount.textContent = `Showing ${showing} of ${total} deals.`;
 }
@@ -169,10 +191,14 @@ function init() {
     if (!validatePriceRange()) return;
     const q = normalize(els.qInput.value);
     const type = els.typeSelect.value;
+    const sortKey = els.sortSelect.value;
     const min = parsePriceInput(els.minPrice);
     const max = parsePriceInput(els.maxPrice);
 
-    const filtered = applyPriceRange(applyType(applySearch(deals, q), type), min, max);
+    const filtered = applySort(
+      applyPriceRange(applyType(applySearch(deals, q), type), min, max),
+      sortKey
+    );
     updateCount(filtered.length, deals.length);
     renderDeals(filtered);
   }
@@ -183,10 +209,12 @@ function init() {
   });
 
   els.typeSelect.addEventListener("change", runFilters);
+  els.sortSelect.addEventListener("change", runFilters);
 
   document.getElementById("clearBtn").addEventListener("click", () => {
     els.qInput.value = "";
     els.typeSelect.value = "";
+    els.sortSelect.value = "";
     els.minPrice.value = "";
     els.maxPrice.value = "";
     validateSearch();
