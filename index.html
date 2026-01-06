@@ -38,6 +38,25 @@
 
           <div id="dealsCount" class="has-text-grey mb-3"></div>
           <div id="dealsGrid" class="columns is-multiline"></div>
+
+          <template id="dealCardTpl">
+            <div class="column is-4">
+              <div class="card">
+                <div class="card-content">
+                  <p class="title is-6" data-role="dealName"></p>
+                  <p class="subtitle is-7 mb-2" data-role="restaurant"></p>
+                  <p class="mb-3">
+                    <span class="tag is-link is-light" data-role="type"></span>
+                    <span class="tag is-dark is-light" data-role="price"></span>
+                    <span class="tag is-warning is-light" data-role="rating"></span>
+                  </p>
+                  <a class="button is-small is-link is-light" data-role="link" target="_blank" rel="noreferrer">
+                    View deal
+                  </a>
+                </div>
+              </div>
+            </div>
+          </template>
         </div>
       </section>
     </main>
