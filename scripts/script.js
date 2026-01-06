@@ -49,6 +49,7 @@ const els = {
   searchBtn: document.getElementById("searchBtn"),
   dealsGrid: document.getElementById("dealsGrid"),
   dealsCount: document.querySelector("#dealsCount"),
+  emptyState: document.getElementById("emptyState"),
   dealCardTpl: document.getElementById("dealCardTpl"),
   detailsEmpty: document.getElementById("detailsEmpty"),
   detailsBody: document.getElementById("detailsBody"),
@@ -225,6 +226,7 @@ function renderDetails(deal) {
     els.detailsBody.classList.add("is-hidden");
     els.detailsEmpty.classList.remove("is-hidden");
     selectedDealId = null;
+    if (location.hash) location.hash = "";
     return;
   }
 
@@ -235,6 +237,15 @@ function renderDetails(deal) {
   els.detailsRestaurant.textContent = deal.restaurant;
   els.detailsMeta.textContent = `${deal.type} • ${money(deal.price)} • ⭐ ${deal.rating}`;
   els.detailsLink.href = deal.url;
+}
+
+function clearActiveDeal() {
+  selectedDealId = null;
+  renderDetails(null);
+  for (const col of els.dealsGrid.children) {
+    const card = col.firstElementChild;
+    if (card) card.classList.remove("is-active");
+  }
 }
 
 function setActiveDeal(id) {
@@ -265,6 +276,7 @@ function init() {
   updateCount(deals.length, deals.length);
   currentList = deals;
   renderDeals(currentList);
+  els.emptyState.classList.add("is-hidden");
   buildTypeOptions(deals);
   renderDetails(null);
 
@@ -288,6 +300,11 @@ function init() {
     currentList = filtered;
     updateCount(filtered.length, deals.length);
     renderDeals(currentList);
+
+    els.emptyState.classList.toggle("is-hidden", currentList.length > 0);
+    if (selectedDealId && !currentList.some((d) => d.id === selectedDealId)) {
+      clearActiveDeal();
+    }
   }
 
   els.filtersForm.addEventListener("submit", (e) => {
@@ -309,6 +326,7 @@ function init() {
     updateCount(deals.length, deals.length);
     currentList = deals;
     renderDeals(currentList);
+    els.emptyState.classList.add("is-hidden");
   });
 
   els.dealsGrid.addEventListener("click", (e) => {
