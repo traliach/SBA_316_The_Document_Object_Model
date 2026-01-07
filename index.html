@@ -12,6 +12,7 @@
       rel="stylesheet"
       href="./styles/style.css"
     />
+    <script defer src="./scripts/deals.js"></script>
     <script defer src="./scripts/script.js"></script>
   </head>
   <body>
@@ -36,7 +37,7 @@
             Search, filter, sort, and save your favorite deals.
           </div>
 
-          <form id="filtersForm" class="box mb-4">
+          <form id="searchForm" class="box mb-4">
             <div class="field">
               <label class="label" for="q">Search deals</label>
               <div class="control">
@@ -54,6 +55,21 @@
               </p>
             </div>
 
+            <div class="field is-grouped">
+              <div class="control">
+                <button id="searchBtn" class="button is-link" type="submit">
+                  Search
+                </button>
+              </div>
+              <div class="control">
+                <button id="clearSearchBtn" class="button is-light" type="button">
+                  Clear search
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <form id="filtersForm" class="box mb-4">
             <div class="field">
               <label class="label" for="type">Type</label>
               <div class="control">
@@ -119,13 +135,8 @@
 
             <div class="field is-grouped">
               <div class="control">
-                <button id="searchBtn" class="button is-link" type="submit">
-                  Search
-                </button>
-              </div>
-              <div class="control">
-                <button id="clearBtn" class="button is-light" type="button">
-                  Clear
+                <button id="clearFiltersBtn" class="button is-light" type="button">
+                  Clear filters
                 </button>
               </div>
             </div>
@@ -161,6 +172,11 @@
           <template id="dealCardTpl">
             <div class="column is-4">
               <div class="card">
+                <div class="card-image">
+                  <figure class="image is-4by3">
+                    <img data-role="image" src="" alt="" />
+                  </figure>
+                </div>
                 <div class="card-content">
                   <div class="is-flex is-justify-content-space-between is-align-items-start">
                   <p class="title is-6" data-role="dealName"></p>
@@ -171,7 +187,7 @@
                       aria-pressed="false"
                       title="Toggle favorite"
                     >
-                      ☆
+                      ♡
                     </button>
                   </div>
                   <p class="subtitle is-7 mb-2" data-role="restaurant"></p>
