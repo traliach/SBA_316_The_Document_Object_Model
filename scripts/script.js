@@ -130,7 +130,11 @@ function applySearch(list, q) {
   if (!q) return list;
   return list.filter((deal) => {
     const haystack = Object.values(deal)
-      .filter((v) => v !== null && v !== undefined)
+      .flatMap((v) => {
+        if (v === null || v === undefined) return [];
+        if (Array.isArray(v)) return v;
+        return [v];
+      })
       .join(" ");
     return normalize(haystack).includes(q);
   });
