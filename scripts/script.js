@@ -1,17 +1,9 @@
 "use strict";
 
-/*
-  Pizza Deal Finder (In My Town)
 
-  Demo flow (5 minutes):
-  1) Validation: min price > max price disables Search
-  2) Filtering + sorting: search + type + price + sort work together
-  3) Favorites: ★ saves to localStorage and stays after refresh
-  4) Details: click a card to show details + URL hash (#deal-3) deep link
-*/
 
 // --------------------
-// Debug helper (keep false for submission)
+// Debug helper 
 // --------------------
 const DEBUG = false;
 function debugLog(...args) {
@@ -19,12 +11,12 @@ function debugLog(...args) {
 }
 
 // --------------------
-// BOM persistence key
+// BOM persistence key (SBA: localStorage)
 // --------------------
 const FAVORITES_KEY = "pizzaFavorites";
 
 // --------------------
-// Local data (no API needed)
+// Local data (SBA: array of objects)
 // --------------------
 const deals = [
   {
@@ -57,7 +49,7 @@ const deals = [
 ];
 
 // --------------------
-// DOM caching (SBA: getElementById + querySelector)
+// DOM caching (SBA: document.getElementById + document.querySelector)
 // --------------------
 const els = {
   filtersForm: document.getElementById("filtersForm"),
@@ -82,14 +74,14 @@ const els = {
 };
 
 // --------------------
-// App state
+// App state (SBA: 3 variables)
 // --------------------
 let favorites = new Set();
 let currentList = deals;
 let selectedDealId = null;
 
 // --------------------
-// Small helpers
+// Small helpers (SBA: 3 functions)
 // --------------------
 function money(n) {
   return `$${n.toFixed(2)}`;
@@ -107,7 +99,7 @@ function parsePriceInput(el) {
 }
 
 // --------------------
-// Build dropdown options (SBA: createElement + appendChild)
+// Build dropdown options (SBA: document.createElement + appendChild)
 // --------------------
 function buildTypeOptions(list) {
   const set = new Set();
