@@ -18,40 +18,13 @@ const FAVORITES_KEY = "pizzaFavorites";
 // --------------------
 // Local data (SBA: array of objects)
 // --------------------
-const deals = [
-  {
-    id: "deal-1",
-    restaurant: "Slice City",
-    dealName: "2 Slices + Soda",
-    price: 7.99,
-    type: "Lunch",
-    rating: 4.3,
-    url: "https://example.com/slice-city",
-  },
-  {
-    id: "deal-2",
-    restaurant: "Mama Mia Pizza",
-    dealName: "Large 1-Topping",
-    price: 11.99,
-    type: "Carryout",
-    rating: 4.1,
-    url: "https://example.com/mama-mia",
-  },
-  {
-    id: "deal-3",
-    restaurant: "Downtown Pies",
-    dealName: "Family Combo",
-    price: 19.99,
-    type: "Delivery",
-    rating: 4.6,
-    url: "https://example.com/downtown-pies",
-  },
-];
+// deals is defined in scripts/deals.js (loaded before this file)
 
 // --------------------
 // DOM caching (SBA: document.getElementById + document.querySelector)
 // --------------------
 const els = {
+  searchForm: document.getElementById("searchForm"),
   filtersForm: document.getElementById("filtersForm"),
   qInput: document.getElementById("q"),
   qHelp: document.querySelector("#qHelp"),
@@ -61,6 +34,8 @@ const els = {
   maxPrice: document.getElementById("maxPrice"),
   priceHelp: document.querySelector("#priceHelp"),
   searchBtn: document.getElementById("searchBtn"),
+  clearSearchBtn: document.getElementById("clearSearchBtn"),
+  clearFiltersBtn: document.getElementById("clearFiltersBtn"),
   dealsGrid: document.getElementById("dealsGrid"),
   dealsCount: document.querySelector("#dealsCount"),
   emptyState: document.getElementById("emptyState"),
@@ -153,10 +128,12 @@ function validatePriceRange() {
 // --------------------
 function applySearch(list, q) {
   if (!q) return list;
-  return list.filter(
-    (d) =>
-      normalize(d.restaurant).includes(q) || normalize(d.dealName).includes(q)
-  );
+  return list.filter((deal) => {
+    const haystack = Object.values(deal)
+      .filter((v) => v !== null && v !== undefined)
+      .join(" ");
+    return normalize(haystack).includes(q);
+  });
 }
 
 function applyType(list, type) {
@@ -227,6 +204,13 @@ function renderDeals(list) {
   for (const deal of list) {
     const card = els.dealCardTpl.content.cloneNode(true);
 
+    const img = card.querySelector('[data-role="image"]');
+    if (img) {
+      img.src = deal.image || "https://placehold.co/600x400?text=Pizza+Deal";
+      img.alt = `${deal.restaurant} - ${deal.dealName}`;
+      img.loading = "lazy";
+    }
+
     card.querySelector('[data-role="dealName"]').textContent = deal.dealName;
     card.querySelector('[data-role="restaurant"]').textContent = deal.restaurant;
     card.querySelector('[data-role="type"]').textContent = deal.type;
@@ -241,7 +225,8 @@ function renderDeals(list) {
 
     const favBtn = card.querySelector('[data-action="favorite"]');
     const isFav = favorites.has(deal.id);
-    favBtn.textContent = isFav ? "★" : "☆";
+    favBtn.textContent = isFav ? "♥" : "♡";
+    favBtn.classList.toggle("has-text-danger", isFav);
     favBtn.setAttribute("aria-pressed", String(isFav));
 
     frag.appendChild(card);
@@ -363,7 +348,7 @@ function init() {
     if (q.length === 0 || q.length >= 2) runFilters();
   });
 
-  els.filtersForm.addEventListener("submit", (e) => {
+  els.searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
     runFilters();
   });
@@ -371,18 +356,24 @@ function init() {
   els.typeSelect.addEventListener("change", runFilters);
   els.sortSelect.addEventListener("change", runFilters);
 
-  document.getElementById("clearBtn").addEventListener("click", () => {
+  els.filtersForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    runFilters();
+  });
+
+  els.clearSearchBtn.addEventListener("click", () => {
     els.qInput.value = "";
+    validateSearch();
+    runFilters();
+  });
+
+  els.clearFiltersBtn.addEventListener("click", () => {
     els.typeSelect.value = "";
     els.sortSelect.value = "";
     els.minPrice.value = "";
     els.maxPrice.value = "";
-    validateSearch();
     validatePriceRange();
-    updateCount(deals.length, deals.length);
-    currentList = deals;
-    renderDeals(currentList);
-    els.emptyState.classList.add("is-hidden");
+    runFilters();
   });
 
   els.dealsGrid.addEventListener("click", (e) => {
