@@ -1,12 +1,31 @@
 "use strict";
 
+/*
+  Pizza Deal Finder (In My Town)
+
+  Demo flow (5 minutes):
+  1) Validation: min price > max price disables Search
+  2) Filtering + sorting: search + type + price + sort work together
+  3) Favorites: ★ saves to localStorage and stays after refresh
+  4) Details: click a card to show details + URL hash (#deal-3) deep link
+*/
+
+// --------------------
+// Debug helper (keep false for submission)
+// --------------------
 const DEBUG = false;
 function debugLog(...args) {
   if (DEBUG) console.log(...args);
 }
 
+// --------------------
+// BOM persistence key
+// --------------------
 const FAVORITES_KEY = "pizzaFavorites";
 
+// --------------------
+// Local data (no API needed)
+// --------------------
 const deals = [
   {
     id: "deal-1",
@@ -37,6 +56,9 @@ const deals = [
   },
 ];
 
+// --------------------
+// DOM caching (SBA: getElementById + querySelector)
+// --------------------
 const els = {
   filtersForm: document.getElementById("filtersForm"),
   qInput: document.getElementById("q"),
@@ -59,10 +81,16 @@ const els = {
   detailsLink: document.getElementById("detailsLink"),
 };
 
+// --------------------
+// App state
+// --------------------
 let favorites = new Set();
 let currentList = deals;
 let selectedDealId = null;
 
+// --------------------
+// Small helpers
+// --------------------
 function money(n) {
   return `$${n.toFixed(2)}`;
 }
@@ -78,6 +106,9 @@ function parsePriceInput(el) {
   return Number.isFinite(n) ? n : null;
 }
 
+// --------------------
+// Build dropdown options (SBA: createElement + appendChild)
+// --------------------
 function buildTypeOptions(list) {
   const set = new Set();
   for (const d of list) set.add(d.type);
@@ -91,10 +122,16 @@ function buildTypeOptions(list) {
   }
 }
 
+// --------------------
+// Validation (Demo part 1)
+// - Search: 0 chars ok, 1 char shows error, 2+ ok
+// - Price: if min > max, inputs turn red and Search disables (attribute change)
+// --------------------
 function validateSearch() {
   const q = normalize(els.qInput.value);
   const ok = q.length === 0 || q.length >= 2;
 
+  // Bulma classes for user feedback
   els.qInput.classList.toggle("is-danger", !ok);
   els.qHelp.classList.toggle("is-hidden", ok);
 
@@ -107,6 +144,7 @@ function validatePriceRange() {
 
   const ok = min === null || max === null || min <= max;
 
+  // Bulma visual feedback
   els.minPrice.classList.toggle("is-danger", !ok);
   els.maxPrice.classList.toggle("is-danger", !ok);
   els.priceHelp.classList.toggle("is-hidden", ok);
@@ -117,6 +155,10 @@ function validatePriceRange() {
   return ok;
 }
 
+// --------------------
+// Filtering + sorting (Demo part 2)
+// Order: search -> type -> price -> sort
+// --------------------
 function applySearch(list, q) {
   if (!q) return list;
   return list.filter(
@@ -159,6 +201,9 @@ function applySort(list, sortKey) {
   return copy;
 }
 
+// --------------------
+// Favorites (BOM: localStorage) - Demo part 3
+// --------------------
 function loadFavorites() {
   try {
     const raw = localStorage.getItem(FAVORITES_KEY);
@@ -175,6 +220,9 @@ function saveFavorites() {
   localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favorites]));
 }
 
+// --------------------
+// Rendering cards (SBA: template + cloneNode + DocumentFragment)
+// --------------------
 function updateCount(showing, total) {
   els.dealsCount.textContent = `Showing ${showing} of ${total} deals.`;
 }
@@ -221,6 +269,11 @@ function renderDeals(list) {
   }
 }
 
+// --------------------
+// Details panel (Demo part 4)
+// - Clicking a card updates details text + link
+// - Uses location.hash for deep-linking and refresh/back support
+// --------------------
 function renderDetails(deal) {
   if (!deal) {
     els.detailsBody.classList.add("is-hidden");
@@ -270,6 +323,10 @@ function getDealIdFromHash() {
   return id || null;
 }
 
+// --------------------
+// Init + event listeners (SBA: 2+ listeners)
+// submit/input/change/click/hashchange
+// --------------------
 function init() {
   debugLog("init");
   favorites = loadFavorites();
