@@ -8,12 +8,19 @@ A simple single-page app to **search, filter, sort, and save favorite pizza deal
 
 ## How to use
 - **Search deals**: type at least 2 characters and click **Search**.
-- **Filter**: choose a **Type** (Lunch / Carryout / Delivery).
-- **Sort**: sort by price or rating.
-- **Price range**: set Min/Max price.
-  - If Min > Max, inputs turn red and **Search** is disabled until fixed.
-- **Favorites**: click ☆ to save a favorite (becomes ★). Favorites stay after refresh.
+- Search checks **all deal attributes** (restaurant, deal name, type, price, rating, url, etc.).
+- **Filters**: use the separate filters box to narrow results:
+  - **Type**: Lunch / Carryout / Delivery
+  - **Sort**: price or rating
+  - **Price range**: set Min/Max price
+    - If Min > Max, inputs turn red and **Search** is disabled until fixed.
+- **Clear search**: clears only the search box.
+- **Clear filters**: resets Type/Sort/Price filters.
+- **Favorites**: click ♡ to save a favorite (becomes ♥). Favorites stay after refresh.
 - **Deal details**: click a card to see details below. The URL updates (example `#deal-3`) so refresh/back/forward keeps the selected deal.
+
+## Project structure note
+- Deal data lives in `scripts/deals.js` (each deal includes an `image` field rendered on the card).
 
 ## What I practiced (high level)
 - **DOM selection** with `getElementById` and `querySelector`
