@@ -8,7 +8,7 @@ A simple single-page app to **search, filter, sort, and save favorite pizza deal
 
 ## How to use
 - **Search deals**: type at least 2 characters and click **Search**.
-- Search checks **all deal attributes** (restaurant, deal name, type, price, rating, url, etc.).
+- Search checks all deal attributes (restaurant, deal name, type, price, rating, url, city, and tags, etc.).
 - **Filters**: use the separate filters box to narrow results:
   - **Type**: Lunch / Carryout / Delivery
   - **Sort**: price or rating
