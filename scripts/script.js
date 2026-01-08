@@ -128,6 +128,15 @@ function validatePriceRange() {
 // --------------------
 function applySearch(list, q) {
   if (!q) return list;
+
+  // If the user types only a number, avoid matching every deal by substring.
+  // Instead, match exact numeric values (ex: price === 12, rating === 4.3).
+  const isNumericQuery = /^\d+(\.\d+)?$/.test(q);
+  if (isNumericQuery) {
+    const n = Number(q);
+    return list.filter((deal) => deal.price === n || deal.rating === n);
+  }
+
   return list.filter((deal) => {
     const haystack = Object.values(deal)
       .flatMap((v) => {
