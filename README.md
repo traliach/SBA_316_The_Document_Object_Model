@@ -30,3 +30,6 @@ A simple single-page app to **search, filter, sort, and save favorite pizza deal
 - **Form validation** (HTML attributes + JS validation)
 - **Browser features**: `localStorage` (favorites) and `location.hash` (selected deal)
 
+## Image credits
+- Deal photos were downloaded from **Unsplash** and stored locally in `assets/img/`.
+
