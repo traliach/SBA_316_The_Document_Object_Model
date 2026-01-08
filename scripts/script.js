@@ -327,9 +327,6 @@ function init() {
   buildTypeOptions(deals);
   renderDetails(null);
 
-  els.minPrice.addEventListener("input", validatePriceRange);
-  els.maxPrice.addEventListener("input", validatePriceRange);
-
   function runFilters() {
     if (!validateSearch()) return;
     if (!validatePriceRange()) return;
@@ -352,6 +349,16 @@ function init() {
       clearActiveDeal();
     }
   }
+
+  // Auto-refresh results when user adjusts price range (when valid)
+  function handlePriceInput() {
+    const ok = validatePriceRange();
+    if (!ok) return;
+    runFilters();
+  }
+
+  els.minPrice.addEventListener("input", handlePriceInput);
+  els.maxPrice.addEventListener("input", handlePriceInput);
 
   // Auto-refresh results when user clears/updates the search input
   els.qInput.addEventListener("input", () => {
