@@ -13,7 +13,7 @@ const deals = [
     city: "Newark",
     tags: ["quick", "value", "soda"],
     url: "https://example.com/slice-city",
-    image: "https://placehold.co/600x400?text=Slice+City",
+    image: "./assets/img/deal-1.jpg",
   },
   {
     id: "deal-2",
@@ -25,7 +25,7 @@ const deals = [
     city: "Jersey City",
     tags: ["family", "classic", "topping"],
     url: "https://example.com/mama-mia",
-    image: "https://placehold.co/600x400?text=Mama+Mia",
+    image: "./assets/img/deal-2.jpg",
   },
   {
     id: "deal-3",
@@ -37,7 +37,7 @@ const deals = [
     city: "Hoboken",
     tags: ["family", "combo", "delivery"],
     url: "https://example.com/downtown-pies",
-    image: "https://placehold.co/600x400?text=Downtown+Pies",
+    image: "./assets/img/deal-3.jpg",
   },
 
   // -------- Added deals --------
@@ -51,7 +51,7 @@ const deals = [
     city: "Brooklyn",
     tags: ["margherita", "quick", "classic"],
     url: "https://example.com/brooklyn-brick-oven",
-    image: "https://placehold.co/600x400?text=Brooklyn+Brick+Oven",
+    image: "./assets/img/deal-4.jpg",
   },
   {
     id: "deal-5",
@@ -63,7 +63,7 @@ const deals = [
     city: "Newark",
     tags: ["topping", "value", "share"],
     url: "https://example.com/garden-state-pizza",
-    image: "https://placehold.co/600x400?text=Garden+State+Pizza",
+    image: "./assets/img/deal-5.jpg",
   },
   {
     id: "deal-6",
@@ -75,7 +75,7 @@ const deals = [
     city: "Hoboken",
     tags: ["thin-crust", "knots", "quick"],
     url: "https://example.com/hoboken-thin-crust",
-    image: "https://placehold.co/600x400?text=Hoboken+Thin+Crust",
+    image: "./assets/img/deal-6.jpg",
   },
   {
     id: "deal-7",
@@ -87,7 +87,7 @@ const deals = [
     city: "Newark",
     tags: ["late-night", "large", "delivery"],
     url: "https://example.com/newark-night-pies",
-    image: "https://placehold.co/600x400?text=Newark+Night+Pies",
+    image: "./assets/img/deal-7.jpg",
   },
   {
     id: "deal-8",
@@ -99,7 +99,7 @@ const deals = [
     city: "Jersey City",
     tags: ["pepperoni", "combo", "fan-favorite"],
     url: "https://example.com/pepperoni-palace",
-    image: "https://placehold.co/600x400?text=Pepperoni+Palace",
+    image: "./assets/img/deal-8.jpg",
   },
   {
     id: "deal-9",
@@ -111,7 +111,7 @@ const deals = [
     city: "Manhattan",
     tags: ["personal", "drink", "quick"],
     url: "https://example.com/union-square-pizza-bar",
-    image: "https://placehold.co/600x400?text=Union+Square+Pizza+Bar",
+    image: "./assets/img/deal-9.jpg",
   },
   {
     id: "deal-10",
@@ -123,7 +123,7 @@ const deals = [
     city: "Elizabeth",
     tags: ["bundle", "family", "value"],
     url: "https://example.com/jersey-shore-slices",
-    image: "https://placehold.co/600x400?text=Jersey+Shore+Slices",
+    image: "./assets/img/deal-10.jpg",
   },
   {
     id: "deal-11",
@@ -135,7 +135,7 @@ const deals = [
     city: "Maplewood",
     tags: ["cheese", "weekly-special", "classic"],
     url: "https://example.com/maplewood-mozza",
-    image: "https://placehold.co/600x400?text=Maplewood+Mozza",
+    image: "./assets/img/deal-11.jpg",
   },
   {
     id: "deal-12",
@@ -147,7 +147,7 @@ const deals = [
     city: "Newark",
     tags: ["family", "pasta", "combo"],
     url: "https://example.com/ironbound-italian-kitchen",
-    image: "https://placehold.co/600x400?text=Ironbound+Italian+Kitchen",
+    image: "./assets/img/deal-12.jpg",
   },
   {
     id: "deal-13",
@@ -159,7 +159,7 @@ const deals = [
     city: "Clifton",
     tags: ["thin-crust", "duo", "value"],
     url: "https://example.com/clifton-crispy-crust",
-    image: "https://placehold.co/600x400?text=Clifton+Crispy+Crust",
+    image: "./assets/img/deal-13.jpg",
   },
   {
     id: "deal-14",
@@ -171,7 +171,7 @@ const deals = [
     city: "Ridgewood",
     tags: ["wood-fired", "premium", "fan-favorite"],
     url: "https://example.com/ridgewood-wood-fired",
-    image: "https://placehold.co/600x400?text=Ridgewood+Wood-Fired",
+    image: "./assets/img/deal-14.jpg",
   },
   {
     id: "deal-15",
@@ -183,6 +183,6 @@ const deals = [
     city: "Kearny",
     tags: ["kids", "value", "quick"],
     url: "https://example.com/pine-street-pizzeria",
-    image: "https://placehold.co/600x400?text=Pine+Street+Pizzeria",
+    image: "./assets/img/deal-15.jpg",
   },
 ];
