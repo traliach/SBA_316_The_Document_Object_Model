@@ -22,19 +22,11 @@ body {
   outline-offset: 2px;
 }
 
-.card-image img {
-  object-fit: cover;
-}
-
-/* Make the card image area more compact (Bulma's is-4by3 is very tall) */
-.card-image .image.is-4by3 {
-  padding-top: 0;
-  height: 140px;
+/* Let Bulma handle the image box sizing; we only control cropping */
+.card-image .image {
   overflow: hidden;
 }
 
-.card-image .image.is-4by3 img {
-  position: static;
-  width: 100%;
-  height: 140px;
+.card-image img {
+  object-fit: cover;
 }
